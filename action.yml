@@ -1,0 +1,102 @@
+name: 'Syferit Code Defense'
+description: 'Universal Adversarial Code Defense Action against AI Reverse-Engineering Agents by Soltrix Studios.'
+author: 'Soltrix Studios'
+
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  target:
+    description: 'Path to the directory or file to protect (e.g., ./dist, ./build, ./app.py)'
+    required: true
+    default: './dist'
+  output:
+    description: 'Output directory or file path. If omitted, target is protected in-place.'
+    required: false
+    default: ''
+  preset:
+    description: 'Protection intensity preset: standard, hardened, or maximum'
+    required: false
+    default: 'hardened'
+  domain:
+    description: 'Anti-fingerprinting domain dictionary profile: saas, fintech, security, gaming'
+    required: false
+    default: 'saas'
+  seed:
+    description: 'Optional deterministic seed (integer or string) for reproducible enterprise builds'
+    required: false
+    default: ''
+  node-version:
+    description: 'Node.js version to use for executing the Syferit engine'
+    required: false
+    default: '22'
+
+outputs:
+  protected-count:
+    description: 'Number of files successfully hardened with Syferit'
+  status:
+    description: 'Status of the protection pass (success or failure)'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Run Syferit Defense Engine
+      shell: bash
+      env:
+        SYFERIT_TARGET: ${{ inputs.target }}
+        SYFERIT_OUTPUT: ${{ inputs.output }}
+        SYFERIT_PRESET: ${{ inputs.preset }}
+        SYFERIT_DOMAIN: ${{ inputs.domain }}
+        SYFERIT_SEED: ${{ inputs.seed }}
+      run: |
+        echo "======================================================"
+        echo "🛡️  Syferit Code Defense Action by Soltrix Studios"
+        echo "   'Don't just ship it. Syferit.'"
+        echo "======================================================"
+
+        # Build CLI arguments
+        ARGS=( "protect" "$SYFERIT_TARGET" "--preset" "$SYFERIT_PRESET" "--profile" "$SYFERIT_DOMAIN" )
+
+        if [ -n "$SYFERIT_OUTPUT" ]; then
+          ARGS+=( "--out" "$SYFERIT_OUTPUT" )
+        fi
+
+        if [ -n "$SYFERIT_SEED" ]; then
+          ARGS+=( "--seed" "$SYFERIT_SEED" )
+        fi
+
+        echo "Executing: npx @syferit/cli@latest ${ARGS[*]}"
+        npx --yes @syferit/cli@latest "${ARGS[@]}"
+
+        DEST="${SYFERIT_OUTPUT:-$SYFERIT_TARGET}"
+
+        # Count protected files
+        if [ -d "$DEST" ]; then
+          COUNT=$(find "$DEST" -type f \( -name "*.js" -o -name "*.ts" -o -name "*.py" -o -name "*.wasm" -o -name "*.ll" \) | wc -l)
+        else
+          COUNT=1
+        fi
+
+        echo "protected-count=$COUNT" >> $GITHUB_OUTPUT
+        echo "status=success" >> $GITHUB_OUTPUT
+
+        # Generate GitHub Step Summary
+        echo "### 🛡️ Syferit Code Defense Summary" >> $GITHUB_STEP_SUMMARY
+        echo "**Built by [Soltrix Studios](https://soltrixstudios.com). *Don't just ship it. Syferit.***" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+        echo "| :--- | :--- |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Target Protected** | \`$SYFERIT_TARGET\` |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Destination** | \`$DEST\` |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Defense Preset** | \`$SYFERIT_PRESET\` |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Domain Profile** | \`$SYFERIT_DOMAIN\` |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Files Hardened** | \`$COUNT\` |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Status** | 🟢 **Protected** |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "> 🔒 All build artifacts have been protected by Syferit. Ready for deployment." >> $GITHUB_STEP_SUMMARY
