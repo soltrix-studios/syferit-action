@@ -16,7 +16,7 @@ inputs:
     required: false
     default: ''
   preset:
-    description: 'Protection intensity preset: standard, hardened, or maximum'
+    description: 'Protection intensity preset: standard, hardened, maximum, or v2-quantum-rns'
     required: false
     default: 'hardened'
   domain:
@@ -76,9 +76,9 @@ runs:
 
         DEST="${SYFERIT_OUTPUT:-$SYFERIT_TARGET}"
 
-        # Count protected files
+        # Count protected files across all 15+ supported targets
         if [ -d "$DEST" ]; then
-          COUNT=$(find "$DEST" -type f \( -name "*.js" -o -name "*.ts" -o -name "*.py" -o -name "*.wasm" -o -name "*.ll" \) | wc -l)
+          COUNT=$(find "$DEST" -type f \( -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" -o -name "*.mjs" -o -name "*.cjs" -o -name "*.wasm" -o -name "*.ll" -o -name "*.c" -o -name "*.cpp" -o -name "*.cc" -o -name "*.cxx" -o -name "*.m" -o -name "*.mm" -o -name "*.rs" -o -name "*.cs" -o -name "*.kt" -o -name "*.java" -o -name "*.swift" -o -name "*.dart" -o -name "*.py" \) | wc -l)
         else
           COUNT=1
         fi

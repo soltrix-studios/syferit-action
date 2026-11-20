@@ -29,9 +29,9 @@ Run it on your production build artifacts (`./dist`, `./build`, or custom output
 
 ### Why Developers Use Syferit
 
-* **Zero Configuration Required:** Automatically protects JavaScript, TypeScript, WebAssembly, Python, and native builds out of the box.
+* **Zero Configuration Required:** Automatically protects Web (JavaScript, TypeScript), Mobile (Android Kotlin/Java, iOS Swift/Obj-C, Flutter Dart), C# (.NET/Unity), WebAssembly, Python 3, and native C/C++/Rust/LLVM IR builds out of the box.
+* **v2.0 Quantum-Resilient RNS-ARX & Micro-VM:** Neutralizes both AI reverse-engineering agents (`morluto/rea`) and symbolic SMT constraint solvers (Z3, Bitwuzla).
 * **Preserves Full Performance:** Zero noticeable runtime overhead. Your app executes exactly as fast as before.
-* **Prevents Automated Cloning:** Competitors and automated tools cannot understand or reconstruct your proprietary application logic.
 * **Drop-in CI/CD Step:** Adds in seconds to your existing GitHub Actions workflow.
 
 ---
@@ -59,12 +59,12 @@ jobs:
           npm ci
           npm run build
 
-      # 🛡️ Syferit Protection Pass
+      # 🛡️ Syferit v2.0 Protection Pass
       - name: 🛡️ Protect Release with Syferit
-        uses: soltrix-studios/syferit-action@v1
+        uses: soltrix-studios/syferit-action@v2
         with:
           target: './dist'
-          preset: 'hardened'
+          preset: 'v2-quantum-rns'
           domain: 'saas'
 
       - name: Deploy Protected Artifacts
@@ -79,7 +79,7 @@ jobs:
 | :--- | :--- | :---: | :--- |
 | `target` | Path to the directory or file to protect (e.g. `./dist`, `./build`, `./app.py`). | **Yes** | `./dist` |
 | `output` | Destination output directory or file. If omitted, target is protected in-place. | No | `""` (In-place) |
-| `preset` | Protection level: `standard`, `hardened`, or `maximum`. | No | `'hardened'` |
+| `preset` | Protection level: `standard`, `hardened`, `maximum`, or `v2-quantum-rns`. | No | `'hardened'` |
 | `domain` | Industry vocabulary matching: `saas`, `fintech`, `security`, `gaming`. | No | `'saas'` |
 | `seed` | Optional seed value for reproducible builds across releases. | No | `""` (Auto-generated) |
 | `node-version` | Node.js version used to execute the Syferit engine. | No | `'22'` |
@@ -100,25 +100,36 @@ jobs:
 ### Vite / React / Vue / Svelte
 ```yaml
 - name: Protect Vite Output
-  uses: soltrix-studios/syferit-action@v1
+  uses: soltrix-studios/syferit-action@v2
   with:
     target: './dist'
-    preset: 'hardened'
+    preset: 'v2-quantum-rns'
 ```
 
 ### Next.js Production Build
 ```yaml
 - name: Protect Next.js Bundles
-  uses: soltrix-studios/syferit-action@v1
+  uses: soltrix-studios/syferit-action@v2
   with:
     target: './.next'
     preset: 'hardened'
 ```
 
+### Mobile (Android, iOS, Flutter) & C# / Unity
+```yaml
+- name: Protect Mobile / Unity Sources
+  uses: soltrix-studios/syferit-action@v2
+  with:
+    target: './Assets/Scripts'
+    output: './Assets/Scripts-Protected'
+    preset: 'v2-quantum-rns'
+    domain: 'gaming'
+```
+
 ### Electron Desktop Release
 ```yaml
 - name: Protect Electron Bundles
-  uses: soltrix-studios/syferit-action@v1
+  uses: soltrix-studios/syferit-action@v2
   with:
     target: './dist/mac'
     preset: 'maximum'
@@ -127,11 +138,11 @@ jobs:
 ### Python Backend / AI Model Pipeline
 ```yaml
 - name: Protect Python Modules
-  uses: soltrix-studios/syferit-action@v1
+  uses: soltrix-studios/syferit-action@v2
   with:
     target: './src'
     output: './dist-protected'
-    preset: 'maximum'
+    preset: 'v2-quantum-rns'
     domain: 'security'
 ```
 
