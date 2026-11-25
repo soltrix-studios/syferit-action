@@ -79,7 +79,7 @@ jobs:
 | :--- | :--- | :---: | :--- |
 | `target` | Path to the directory or file to protect (e.g. `./dist`, `./build`, `./app.py`). | **Yes** | `./dist` |
 | `output` | Destination output directory or file. If omitted, target is protected in-place. | No | `""` (In-place) |
-| `preset` | Protection level: `standard`, `hardened`, `maximum`, or `v2-quantum-rns`. | No | `'hardened'` |
+| `preset` | Protection level: `standard`, `hardened`, `maximum`, or `v2-quantum-rns`. | No | `'v2-quantum-rns'` |
 | `domain` | Industry vocabulary matching: `saas`, `fintech`, `security`, `gaming`. | No | `'saas'` |
 | `seed` | Optional seed value for reproducible builds across releases. | No | `""` (Auto-generated) |
 | `node-version` | Node.js version used to execute the Syferit engine. | No | `'22'` |

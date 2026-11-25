@@ -18,7 +18,7 @@ inputs:
   preset:
     description: 'Protection intensity preset: standard, hardened, maximum, or v2-quantum-rns'
     required: false
-    default: 'hardened'
+    default: 'v2-quantum-rns'
   domain:
     description: 'Anti-fingerprinting domain dictionary profile: saas, fintech, security, gaming'
     required: false
